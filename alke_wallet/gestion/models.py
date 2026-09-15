@@ -65,6 +65,3 @@ class Transaccion(models.Model):
     def __str__(self):
         return f'{self.tipo_transaccion} de ${self.monto} a {self.destinatario.nombre}'
 
-
-
-
