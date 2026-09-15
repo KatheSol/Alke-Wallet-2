@@ -1,0 +1,43 @@
+{% extends 'gestion/index/menu_index.html' %}
+
+{% load static %} 
+
+{% block title %} Registro | {% endblock %}
+
+{% block menu_index %}
+        
+        <main>
+        <div class="main-login">
+            <div class="mb-5 div-login">
+                <h2>Registro de usuario</h2>
+                <form id="formRegistro">
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Nombre Completo</label>
+                        <input type="text" class="form-control" name="nombre" id="nombre">
+                    </div>
+                        <div class="mb-3">
+                        <label for="rut" class="form-label">RUT</label>
+                        <input type="text" class="form-control" name="rut" id="rut" placeholder="12345678-9">
+                    </div>
+                        <div class="mb-3">
+                        <label for="correo" class="form-label">Correo</label>
+                        <input type="text" class="form-control" name="correo" id="correo">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" name="password" id="password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordConfirm" class="form-label">Confirmar contraseña</label>
+                        <input type="password" class="form-control" name="passwordConfirm" id="passwordConfirm">
+                    </div>
+                    <div id="mensaje"></div>
+                    <div>
+                        <button type="submit" class="btn btn-primary mt-3">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+{% endblock menu_index %}

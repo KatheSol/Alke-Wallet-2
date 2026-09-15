@@ -1,0 +1,36 @@
+{% extends 'gestion/index/menu_index.html' %}
+
+{% load static %} 
+
+{% block title %} Login | {% endblock %}
+
+{% block menu_index %}
+        
+    <main>
+        <div class="main-login">
+            <div class="form mb-5 div-login">
+                <h2>Login</h2>
+                <form id="formLogin" >
+                    <div class="mb-3">
+                        <label for="nombre" class="form-label">Usuario(Rut)</label>
+                        <input type="text" class="form-control" name="rut" id="rut">
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Contraseña</label>
+                        <input type="password" class="form-control" name="password" id="password">
+                    </div>
+                    <div id="mensaje"></div>
+                    <div>
+                        <button type="submit" class="btn btn-primary mt-3" >Iniciar Sesión</button>
+                        <a class="registrate" href="{% url 'registro-user' %}">Registrate aquí</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+{% endblock menu_index %}
+
+
+
+

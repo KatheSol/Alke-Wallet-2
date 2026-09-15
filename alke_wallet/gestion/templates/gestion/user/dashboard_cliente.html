@@ -1,0 +1,48 @@
+{% extends 'gestion/user/menu_user.html' %}
+
+{% load static %} 
+
+{% block title %} Dashboard | {% endblock %}
+{% block title_nav %} Usuario {% endblock %}
+
+{% block menu_user %}
+    <section>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Saldo disponible</h1>
+                        <hr>
+                        <p id="saldo" class="card-text">
+                            <i class="fa-solid fa-wallet"></i>
+                        </p>
+                    </div>
+                    <a href="{% url 'envio-dinero' %}" class="btn btn-claro">Enviar Dinero</a>
+                    <a href="{% url 'deposito' %}" class="btn btn-claro">Depositar</a>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-body">
+                        <h1 class="card-title">Últimos Movimientos</h1>
+                        <a href="{% url 'transacciones' %}" class="btn btn-claro">Ver más</a>
+                        <hr>
+                        <table class="table table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Fecha/Hora</th>
+                                    <th scope="col">Destino</th>
+                                    <th scope="col">Monto</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ultimosMovimientos">
+                                <!---Tabla se rellena con función mostrarTransferencias-->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock menu_user %}

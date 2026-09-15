@@ -1,0 +1,26 @@
+{% extends 'gestion/user/menu_user.html' %}
+
+{% load static %} 
+
+{% block title_nav %} Depósito {% endblock %}
+
+{% block menu_user %}
+    
+    <main>
+        <section>
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Depositar</h1>
+                    <hr>
+                    <form id="formDeposit" class="form-claro">
+                        <div id="mensaje"></div>
+                        <label for="montoDeposito" class="form-label">Monto a depositar</label>
+                        <input type="text" class="form-control" id="deposito">
+                        <button type="submit" class="btn btn-claro mt-3" >Depositar</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+{% endblock menu_user %}

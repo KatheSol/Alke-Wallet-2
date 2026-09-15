@@ -1,0 +1,40 @@
+{% extends 'gestion/base.html' %}
+
+{% load static %} 
+
+{% block body_class %} body-index {% endblock %}
+
+{% block content %}
+
+    <header>
+        <nav class="navbar navbar-expand-lg bg-transparent">
+            <div class="container-fluid">
+                <a class="color-nav navbar-brand" href="#">Alke Wallet</a>
+                <button class="color-nav navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="color-nav">
+                    <i class="fa-solid fa-bars"></i>
+                </span>
+                </button>
+                <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class=" color-nav nav-link bg-transparent" aria-current="page" href="{% url 'index' %}">Inicio</a>
+                        <a class="color-nav nav-link bg-transparent" href="{% url 'registro-user' %}">Registrate aquí</a>
+                        <a class="color-nav nav-link bg-transparent" href="#">Contacto</a>
+                        <a class="color-nav nav-link bg-transparent" href="{% url 'login' %}">
+                            <i class="fa-solid fa-user"></i>
+                            Login
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        {% block menu_index %}
+        {% endblock menu_index %}
+    </main>
+    <footer>
+        <p>2026 Alke Wallet</p>
+    </footer>
+
+{% endblock content %}

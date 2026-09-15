@@ -1,0 +1,72 @@
+{% extends 'gestion/user/menu_user.html' %}
+
+{% load static %} 
+
+{% block title_nav %} Envio Dinero {% endblock %}
+
+{% block menu_user %}
+    
+    <main>
+        <section>
+            <div class="card">
+                <div class="card-body">
+                    <h1 class="card-title">Transferencia</h1>
+                    <hr>
+                    <form id="formTransferencia"  class="form-claro">
+                        <div id="mensaje"></div>
+                        <label for="destinatario" class="form-label">Seleccione al destinatario</label>
+                        <select id="selectDestinatario" class="form-select">
+                            <option id="usuariosOptions" selected>Seleccionar</option>
+                            <!--Se rellena con la función listarDestinatarios()-->
+                        </select>
+                        <!-- Button  modal -->
+                        <button type="button" class="btn btn-claro" data-bs-toggle="modal" data-bs-target="#modalNuevoDestinatario">
+                        Agregar nuevo destinatario
+                        </button>
+                        <label for="montotransferencia" class="form-label">Monto a transferir</label>
+                        <input type="text" class="form-control" id="montoTransferencia">
+                        <button type="submit" class="btn btn-claro mt-3" >Transferir</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+        <!--MODAL AGREGAR DESTINATARIO -->
+    <div class="modal fade" id="modalNuevoDestinatario" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-color">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Destinatario</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevoDestinatario" class="form-claro">
+                        <div class="mb-3">
+                            <label for="nombre" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" name="nombre" id="nombre">
+                        </div>
+                            <div class="mb-3">
+                            <label for="rut" class="form-label">RUT</label>
+                            <input type="text" class="form-control" name="rut" id="rut">
+                        </div>
+                            <div class="mb-3">
+                            <label for="banco" class="form-label">Banco</label>
+                            <input type="text" class="form-control" name="banco" id="banco">
+                        </div>
+                        <div class="mb-3">
+                            <label for="Cuenta" class="form-label">N° Cuenta</label>
+                            <input type="text" class="form-control" name="numeroCuenta" id="numeroCuenta">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-claro" onclick="agregarDestinatario()">Guardar Cambios</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock menu_user %}
+

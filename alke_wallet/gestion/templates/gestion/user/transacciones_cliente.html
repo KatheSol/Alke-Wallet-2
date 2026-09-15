@@ -1,0 +1,27 @@
+{% extends 'gestion/user/menu_user.html' %}
+
+{% load static %} 
+
+{% block title_nav %} Transacciones {% endblock %}
+
+{% block menu_user %}
+
+    <main>
+        <section>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Fecha/Hora</th>
+                        <th scope="col">Destino</th>
+                        <th scope="col">Comentario</th>
+                        <th scope="col">Monto</th>
+                    </tr>
+                </thead>
+                <tbody id="tablaTransacciones">
+                    <!---Tabla se rellena con función mostrarTransferencias-->
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+{% endblock menu_user %}
