@@ -15,7 +15,7 @@ class Cliente(AbstractUser):
         return not self.is_staff
 
     def __str__(self):
-        return self.nombre
+        return self.rut
 
 
 class Cuenta(models.Model):    
@@ -26,10 +26,16 @@ class Cuenta(models.Model):
             ('VISTA', 'Cuenta vista')
         ]
 
+    ESTADO_CUENTA = [
+        ('ACTIVA', 'Activa'),
+        ('INACTIVA', 'Inactiva')
+    ]
+
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, related_name='cliente_cuenta', null=True)
     numero_cuenta = models.CharField(max_length=12)
     tipo_cuenta = models.CharField(max_length=20, choices=TIPO_CUENTA, default='VISTA')
     saldo = models.DecimalField(max_digits=10, decimal_places=2)
+    estado = models.CharField(max_length=20, choices=ESTADO_CUENTA, default='ACTIVA')
 
     def __str__(self):
         return f'{self.numero_cuenta} - {self.cliente.rut}'

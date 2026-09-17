@@ -1,0 +1,6 @@
+============
+|| CREATE ||
+============
+
+from gestion.models import Cliente
+Cliente.objects.create(username='1994567-8', password='Abc1234', first_name='Rosa', last_name='Jerez', email='rosa.jereza@gmail.com', rut='1994567-8', direccion='Calle 13', telefono='56987654321')
