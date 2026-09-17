@@ -6,8 +6,12 @@ urlpatterns = [
     path('login/', login, name='login'),
     path('registro/', registro, name='registro-user'),
     path('dashboard/', dashboard_cliente, name='dashboard-cliente'),
-    path('transacciones/', transacciones_cliente, name='transacciones-cliente'),
+    path('transacciones-cliente/', transacciones_cliente, name='transacciones-cliente'),
     path('envioDinero/', envio_dinero, name='envio-dinero'),
     path('deposito/', deposito, name='deposito'),
+    path('dashboard-admin/', dashboard_admin, name='dashboard-admin'),
+    path('transacciones/', transacciones, name='transacciones'),
+    path('lista-clientes/', lista_clientes, name='lista-clientes'),
+    path('datos-cliente/', datos_cliente, name='datos-cliente'),
 
 ]

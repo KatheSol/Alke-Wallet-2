@@ -1,0 +1,43 @@
+{% extends 'gestion/base.html' %}
+
+{% load static %} 
+
+{% block title %} Menu Admin | {% endblock %}
+
+{% block content %}
+
+    <header>
+        <nav class="navbar navbar-expand-lg color-nav">
+            <div class="container-fluid">
+                <a class="color-nav navbar-brand">{% block title_nav %}  {% endblock %}</a>
+                <button class="color-nav navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+                <span>
+                    <i class="fa-solid fa-bars"></i>
+                </span>
+                </button>
+                <div class="collapse navbar-collapse " id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link color-nav" href="{% url 'lista-clientes' %}">Clientes</a>
+                        <a class="nav-link color-nav" href="{% url 'transacciones' %}">Transacciones</a>
+                        <a class="nav-link color-nav" href="{% url 'dashboard-admin' %}">
+                            <i class="fa-solid fa-outdent"></i>
+                            Dashboard
+                        </a>
+                        <a class="color-nav nav-link" href="index.html">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                            Cerrar Sesión
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main>
+        {% block menu_admin %}
+        {% endblock menu_admin %}
+    </main>
+    <footer>
+        <p>2026 Alke Wallet</p>
+    </footer>
+
+{% endblock content %}

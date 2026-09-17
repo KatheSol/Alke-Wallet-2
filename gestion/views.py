@@ -21,3 +21,15 @@ def envio_dinero(request):
 
 def deposito(request):
     return render(request, "gestion/user/deposito.html")
+
+def dashboard_admin(request):
+    return render(request,"gestion/administrador/dashboard_admin.html")
+
+def transacciones(request):
+    return render(request, "gestion/administrador/transacciones.html")
+
+def lista_clientes(request):
+    return render(request, "gestion/administrador/lista_clientes.html")
+
+def datos_cliente(request):
+    return render(request, "gestion/administrador/datos_cliente.html")
