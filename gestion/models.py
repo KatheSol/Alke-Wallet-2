@@ -15,7 +15,7 @@ class Cliente(AbstractUser):
         return not self.is_staff
 
     def __str__(self):
-        return self.nombre
+        return self.rut
 
 
 class Cuenta(models.Model):    
