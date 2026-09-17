@@ -33,9 +33,9 @@ class Cuenta(models.Model):
 
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, related_name='cliente_cuenta', null=True)
     numero_cuenta = models.CharField(max_length=12)
-    tipo_cuenta = models.CharField(max_length=20, choices=TIPO_CUENTA, default='VISTA')
+    tipo_cuenta = models.CharField(max_length=20, choices=TIPO_CUENTA, default='vista')
     saldo = models.DecimalField(max_digits=10, decimal_places=2)
-    estado = models.CharField(max_length=20, choices=ESTADO_CUENTA, default='ACTIVA')
+    estado = models.CharField(max_length=20, choices=ESTADO_CUENTA, default='activa')
 
     def __str__(self):
         return f'{self.numero_cuenta} - {self.cliente.rut}'
@@ -63,10 +63,9 @@ class Transaccion(models.Model):
 
     cuenta = models.ForeignKey(Cuenta, on_delete=models.SET_NULL, related_name='cuenta_transaccion', null=True)
     tipo_transaccion = models.CharField(max_length=20, choices=TIPO_TRANSACCION)
-    banco_destino = models.CharField(max_length=20)
     monto = models.DecimalField(max_digits=10, decimal_places=2)
     destinatario = models.ForeignKey(Destinatario, on_delete=models.SET_NULL, related_name='destinatario', null=True)
-    fecha = models.DateField(auto_now_add=True)
+    fecha = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.tipo_transaccion} de ${self.monto} a {self.destinatario.nombre}'

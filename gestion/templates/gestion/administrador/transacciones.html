@@ -17,12 +17,25 @@
                         <th scope="col">Tipo Transacción</th>
                         <th scope="col">Cuenta Destino</th>
                         <th scope="col">Banco Destino</th>
-                        <th scope="col">Comentario</th>
                         <th scope="col">Monto</th>
+                        <th scope="col">Ver</th>
                     </tr>
                 </thead>
                 <tbody id="tablaTransacciones">
-                    <!---Tabla se rellena con función mostrarTransferencias-->
+                    {% for transaccion in transacciones %}
+                        <th scope="row">{{ transaccion.fecha|date:'d-m-Y H:i'}}</th>
+                        <td>{{ transaccion.cuenta.cliente}}</td>
+                        <td>{{ transaccion.cuenta.numero_cuenta}}</td>
+                        <td>{{ transaccion.tipo_transaccion|capfirst }}</td>
+                        <td>{{ transaccion.destinatario.cuenta }}</td>
+                        <td>{{ transaccion.destinatario.banco }}</td>
+                        <td>$ {{ transaccion.monto }}</td>
+                        <td>                                             
+                            <button class="btn btn-info" data-bs-toggle="modal" data-bs-target="#modalDetalleTransaccion" data-id="{{transaccion.pk}}">
+                                Detalle
+                            </button>
+                        </td>
+                    {% endfor %}
                 </tbody>
             </table>
         </section>

@@ -11,14 +11,24 @@
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th scope="col">Fecha/Hora</th>
-                        <th scope="col">Destino</th>
-                        <th scope="col">Comentario</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Nombre destinatario</th>
+                        <th scope="col">RUT destinatario</th>
+                        <th scope="col">Cuenta destino</th>
+                        <th scope="col">Banco destino</th>
                         <th scope="col">Monto</th>
                     </tr>
                 </thead>
                 <tbody id="tablaTransacciones">
-                    <!---Tabla se rellena con función mostrarTransferencias-->
+                    {% for transaccion in transacciones %}
+                        <th scope="row">{{ transaccion.fecha|date:'d-m-Y H:i'}}</th>
+                        <td>{{ transaccion.tipo_transaccion|capfirst }}</td>
+                        <td>{{ transaccion.destinatario.nombre }}</td>
+                        <td>{{ transaccion.destinatario.rut }}</td>
+                        <td>{{ transaccion.destinatario.banco }}</td>
+                        <td>$ {{ transaccion.monto }}</td>
+                    {% endfor %}
                 </tbody>
             </table>
         </section>

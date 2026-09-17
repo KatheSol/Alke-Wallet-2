@@ -32,12 +32,14 @@ class CuentaAdmin(admin.ModelAdmin):
         'cliente',
         'numero_cuenta', 
         'tipo_cuenta', 
-        'saldo'
+        'saldo',
+        'estado'
     )
     
     list_filter = (
         'cliente',
-        'tipo_cuenta'
+        'tipo_cuenta',
+        'estado'
     )
     
     search_fields = (
@@ -71,14 +73,12 @@ class TransaccionAdmin(admin.ModelAdmin):
     list_display = (
         'cuenta',
         'tipo_transaccion', 
-        'banco_destino', 
         'monto',
         'destinatario',
         'fecha'
     )
     
     list_filter = (
-        'banco_destino',
         'tipo_transaccion',
         'fecha'
 
