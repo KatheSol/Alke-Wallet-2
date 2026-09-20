@@ -8,6 +8,12 @@
 
     <main>
         <section>
+            <div class="mb-5">
+            <!-- Button  modal Nuevo cliente-->
+            <button type="button" class="btn btn-claro" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">
+                Nuevo Cliente
+            </button>
+        </div>
             <table class="table table-striped table-hover">
                 <thead>
                     <tr>
@@ -50,5 +56,26 @@
             </table>
         </section>
     </main>
+
+    <!--MODAL AGREGAR NUEVO CLIENTE-->
+    <div class="modal fade" id="modalNuevoCliente" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-color">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Cliente</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formRegistro" method="POST" class="form-claro">
+                    {% csrf_token %} <!--formulario seguro-->
+                    <div class="modal-body">
+                        {{form.as_p}}
+                    </div>
+                    <div class="modal.footer">
+                        <button type="submit" class="btn btn-claro mt-3">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock menu_admin %}

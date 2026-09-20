@@ -54,7 +54,6 @@ a{
 
 p{
     color:var(--color_1);
-    margin: 50px;
 }
 
 footer p {
@@ -156,7 +155,7 @@ main div button {
 }
 
 .main-login{
-    height: 80vh;
+    
     display: flex;
     justify-content: center;
     align-items: center;

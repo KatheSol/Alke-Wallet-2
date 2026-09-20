@@ -34,7 +34,7 @@ class Cuenta(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.SET_NULL, related_name='cliente_cuenta', null=True)
     numero_cuenta = models.CharField(max_length=12)
     tipo_cuenta = models.CharField(max_length=20, choices=TIPO_CUENTA, default='vista')
-    saldo = models.DecimalField(max_digits=10, decimal_places=2)
+    saldo = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     estado = models.CharField(max_length=20, choices=ESTADO_CUENTA, default='activa')
 
     def __str__(self):

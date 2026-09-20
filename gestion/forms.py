@@ -8,33 +8,37 @@ from django.contrib.auth.models import User
 class ClienteForm(forms.ModelForm):
     class Meta:
         model = Cliente
-        fields = ['rut', 'nombre', 'apellido','email', 'direccion', 'telefono']
+        fields = ['rut','first_name','last_name','password', 'email','direccion', 'telefono']
         widgets = {
             'rut':forms.TextInput(
                 attrs={'class':'form-control'}
-                ),
-            'nombre': forms.TextInput(
+            ),
+            'first_name': forms.TextInput(
                 attrs={'class':'form-control'}
             ),
-            'apellido': forms.TextInput(
+            'last_name': forms.TextInput(
                 attrs={'class':'form-control',}
             ),
-            'email': forms.DateInput(
+            'password': forms.TextInput(
+                attrs={'class':'form-control', 'type':'password'}
+            ),
+            'email': forms.EmailInput(
+                attrs={'class':'form-control', 'type':'email'}
+            ),
+            'direccion': forms.TextInput(
                 attrs={'class':'form-control'}
             ),
-            'direccion': forms.DateInput(
-                attrs={'class':'form-control'}
-            ),
-            'telefono': forms.DateInput(
+            'telefono': forms.TextInput(
                 attrs={'class':'form-control'}
             ),
         }
         labels = {
             'rut': 'RUT:',
-            'nombre': 'Nombre:',
-            'apellido': 'Apellido:',
+            'first_name': 'Nombre:',
+            'last_name': 'Apellido:',
+            'password': 'Contraseña:',
             'email': 'Email:',
-            'direccion': 'Dirección:',
+            'direccion': 'Dirección',
             'telefono': 'Teléfono:',
         }
         
@@ -44,8 +48,10 @@ class ClienteForm(forms.ModelForm):
                 raise forms.ValidationError("Debe ingresar un rut válido")
             return rut
 
+
+
 ### Formulario cuenta 
-class CuentaForm(forms.ModelForm):
+'''class CuentaForm(forms.ModelForm):
     class Meta:
         model = Cuenta
         fields = ['cliente', 'numero_cuenta', 'tipo_cuenta','saldo']
@@ -76,4 +82,4 @@ class CuentaForm(forms.ModelForm):
                 raise forms.ValidationError("El campo cliente no puede estar vacío")
             return cliente
 
-    
+    '''
