@@ -231,8 +231,6 @@ table .table-striped .table-hover {
 }
 
 
-/*------------ sendmoney -------------------*/
-
 .div-transferencia{
     background-color: var(--color_1);
 }
@@ -244,9 +242,6 @@ table .table-striped .table-hover {
 .modal-body form{
     color: var(--color_1);
 }
-
-
-/*------------ deposit -------------------*/
 
 .form-claro label{
     color: var(--color_1);

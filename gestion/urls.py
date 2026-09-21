@@ -12,6 +12,6 @@ urlpatterns = [
     path('dashboard-admin/', dashboard_admin, name='dashboard-admin'),
     path('transacciones/', transacciones, name='transacciones'),
     path('lista-clientes/', lista_clientes, name='lista-clientes'),
-    path('datos-cliente/', datos_cliente, name='datos-cliente'),
+    path('datos-cliente/<int:pk>', datos_cliente, name='datos-cliente'),
 
 ]

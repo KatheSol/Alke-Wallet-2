@@ -7,7 +7,143 @@
 {% block menu_admin %}
 
     <main>
-        
+        <div class="container py-5">
+            <!-- Fila de Encabezado Principal -->
+            <div class="row mb-4">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                    <div>
+                        <h1 class="mb-1 fw-bold"> Gestión de cliente</h1>
+                        <p class="small mb-0">Revisa la información de perfil, productos financieros y movimientos asociados.</p>
+                    </div>
+                    <a href="{% url 'lista-clientes' %}" class="btn btn-outline btn-claro btn-sm">
+                        ← Volver a la Lista
+                    </a>
+                </div>
+            </div>
+            <div class="row g-4">
+                <!-- COLUMNA IZQUIERDA: Formulario de Datos Personales -->
+                <div class="col-lg-4">
+                    <div class="card border-0 h-100">
+                        <div class="card-header modal-color d-flex justify-content-center">
+                            <h5 class="card-title mb-0">{{ cliente.first_name }} {{ cliente.last_name }}</h5>
+                        </div>
+                        <div class="card-body p-4">
+                            <form method="POST" class="form-claro">
+                                {% csrf_token %}
+                                <div class="mb-3">
+                                    <label class="form-label small fw-bold">RUT</label>
+                                    <input type="text" class="form-control bg-light" value="{{ cliente.rut }}" readonly disabled>
+                                </div>
+                                <!-- Renderizado manual de los campos de Django para que uses Bootstrap -->
+                                <div class="mb-3">
+                                    <label class="form-label">Nombre</label>
+                                    <input type="text" class="form-control bg-light" value="{{ cliente.first_name }}" >
+                                </div> 
+                                <div class="mb-3">
+                                    <label class="form-label">Apellido</label>
+                                    <input type="text" class="form-control bg-light" value="{{ cliente.last_name }}" >
+                                </div> 
+                                <div class="mb-3">
+                                    <label class="form-label">Email</label>
+                                    <input type="text" class="form-control bg-light" value="{{ cliente.email }}" >
+                                </div> 
+                                <div class="mb-3">
+                                    <label class="form-label">Teléfono</label>
+                                    <input type="text" class="form-control bg-light" value="{{ cliente.telefono }}" >
+                                </div> 
+                                <!-- Botones de Acción de Datos -->
+                                <div class="d-grid gap-2 border-top pt-3">
+                                    <button type="submit" class="btn btn-claro">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- COLUMNA DERECHA: Cuentas y Transacciones -->
+                <div class="col-lg-8">
+                    <div class="d-flex flex-column gap-4">
+                        <!-- SECCIÓN DE CUENTAS ASOCIADAS -->
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-secondary text-white py-3 d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0 fw-semibold">Cuentas Bancarias</h5>
+                                <span class="badge bg-light text-dark fw-bold">{{ cuentas|length }} Cuenta(s)</span>
+                            </div>
+                            <div class="card-body p-0">
+                                <table class="table table-striped table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Tipo de Cuenta</th>
+                                            <th>Número de Cuenta</th>
+                                            <th>Saldo Disponible</th>
+                                            <th>Estado</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for cuenta in cuentas %}
+                                            <tr>
+                                                <td scope="row">{{ cuenta.tipo_cuenta }}</td>
+                                                <td>{{ cuenta.numero_cuenta }}</td>
+                                                <td>${{ cuenta.saldo }}</td>
+                                                <td> 
+                                                    {% if cuenta.estado == 'activa' %}
+                                                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCambiarEstado" data-id="{{cuenta.pk}}">
+                                                            {{ cuenta.estado|capfirst }}
+                                                        </button>
+                                                    {% else %}
+                                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalCambiarEstado" data-id="{{cuenta.pk}}">
+                                                            {{ cuenta.estado|capfirst }}
+                                                        </button>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="4" class="text-center py-4 text-muted">
+                                                    Este cliente no posee cuentas registradas en el sistema.
+                                                </td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- SECCIÓN DE HISTORIAL DE TRANSACCIONES -->
+                        <div class="card shadow-sm border-0">
+                            <div class="card-header bg-dark text-white py-3">
+                                <h5 class="card-title mb-0 fw-semibold">Historial de Transacciones</h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                    <table class="table table-striped table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>Fecha / Hora</th>
+                                                <th>Origen</th>
+                                                <th>Tipo</th>
+                                                <th>Destinatario</th>
+                                                <th>Monto</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for movimiento in ultimos_movimientos %}
+                                                <tr>
+                                                    <td>{{ movimiento.fecha|date:'d-m-Y H:i' }}</td>
+                                                    <td>{{ movimiento.cuenta }}</td>
+                                                    <td>{{ movimiento.tipo_transaccion }}</td>
+                                                    <td>{{ movimiento.destinatario }}</td>
+                                                    <td>{{ movimiento.monto }}</td>
+                                                </tr>
+                                            {% endfor %}
+                                        </tbody>  
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
 {% endblock menu_admin %}

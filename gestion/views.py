@@ -1,9 +1,10 @@
+import random
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from .forms import *
 from django.contrib.auth import login, logout
-from django.urls import reverse_lazy
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.contrib import messages
+
 # Create your views here.
 def index(request):
     return render(request, "gestion/index/index.html")
@@ -11,16 +12,37 @@ def index(request):
 def login_cliente(request):
     return render(request, "gestion/index/login.html")
 
+### registro cliente
 def registro(request):
+
     if request.method =='POST':
         form = ClienteForm(request.POST)
         if form.is_valid():
-            usuario = form.save(commit=False) ###guardar temporalmente
-            usuario.username = usuario.rut
-            usuario.save() ### se guarda
-            login(request,usuario)
+            cliente = form.save(commit=False) ###guardar temporalmente
+            cliente.username = cliente.rut
+            cliente.save() ### se guarda
+            login(request,cliente)
+
+            ###Creamos una cuenta bancaria cuando se registre un cliente
+            # rescatamos el tipo de cuenta seleccionada
+            cuenta_select = form.cleaned_data.get('tipo_cuenta')
+            
+            # creamos el numero aleatorio de la cuenta
+            while True:
+                nro_aleatorio = str(random.randint(1000000000, 9999999999))
+                if not Cuenta.objects.filter(numero_cuenta=nro_aleatorio).exists():
+                    break # sale del bucle cuando encuentra un número disponible
+
+            # se crea la cuenta bancaria cliente
+            Cuenta.objects.create(
+                cliente=cliente, 
+                numero_cuenta=nro_aleatorio,
+                tipo_cuenta=cuenta_select
+                )
+            
             return redirect('dashboard-cliente')
-        
+            
+    
         else: 
             return render(request,"gestion/index/registro_user.html", {'form':form})
 
@@ -70,10 +92,29 @@ def lista_clientes(request):
 
         form = ClienteForm(request.POST)
         if form.is_valid():
-            usuario = form.save(commit=False) ###guardar temporalmente
-            usuario.username = usuario.rut
-            usuario.save() ### se guarda
-            return redirect('lista-clientes')            
+            cliente = form.save(commit=False) ###guardar temporalmente
+            cliente.username = cliente.rut
+            cliente.save() ### se guarda
+
+            ###Creamos una cuenta bancaria cuando se registre un cliente
+            # rescatamos el tipo de cuenta seleccionada
+            cuenta_select = form.cleaned_data.get('tipo_cuenta')
+            
+            # creamos el numero aleatorio de la cuenta
+            while True:
+                nro_aleatorio = str(random.randint(1000000000, 9999999999))
+                if not Cuenta.objects.filter(numero_cuenta=nro_aleatorio).exists():
+                    break # sale del bucle cuando encuentra un número disponible
+
+            # se crea la cuenta bancaria cliente
+            Cuenta.objects.create(
+                cliente=cliente, 
+                numero_cuenta=nro_aleatorio,
+                tipo_cuenta=cuenta_select
+                )
+            
+            return redirect('lista-clientes')          
+        
         else: 
             return render(request, "gestion/administrador/lista_clientes.html")
 
@@ -91,5 +132,15 @@ def lista_clientes(request):
     else:
         return render(request, "gestion/administrador/lista_clientes.html")
 
-def datos_cliente(request):
-    return render(request, "gestion/administrador/datos_cliente.html")
+def datos_cliente(request,pk):
+
+    cliente = get_object_or_404(Cliente, pk=pk)
+    cuentas = Cuenta.objects.filter(cliente_id=cliente)
+    transacciones = Transaccion.objects.filter(cuenta__cliente=cliente).select_related('cuenta')
+    ultimos_movimientos = Transaccion.objects.filter(cuenta__cliente=cliente).select_related('cuenta').order_by('-fecha')[:5]
+    return render(request, "gestion/administrador/datos_cliente.html", {
+        'cliente': cliente,
+        'cuentas': cuentas,
+        'transacciones': transacciones,
+        'ultimos_movimientos': ultimos_movimientos
+    })

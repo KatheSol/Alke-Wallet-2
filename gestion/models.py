@@ -38,7 +38,7 @@ class Cuenta(models.Model):
     estado = models.CharField(max_length=20, choices=ESTADO_CUENTA, default='activa')
 
     def __str__(self):
-        return f'{self.numero_cuenta} - {self.cliente.rut}'
+        return f'{self.numero_cuenta}'
 
 
 class Destinatario(models.Model):

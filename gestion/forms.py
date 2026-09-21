@@ -6,10 +6,24 @@ from django.contrib.auth.models import User
 
 ## Formulario cliente
 class ClienteForm(forms.ModelForm):
+
+    TIPO_CUENTA = [
+        ('vista', 'Cuenta vista'),
+        ('ahorro', 'Cuenta ahorro'),
+        ('corriente', 'Cuenta corriente')
+    ]
+
+    # Selecct tipo cuenta
+    tipo_cuenta = forms.ChoiceField(
+        choices=TIPO_CUENTA,
+        label="Tipo de Cuenta",
+        widget=forms.Select(attrs={'class': 'form-select'})
+    )
+
     class Meta:
         model = Cliente
         fields = ['rut','first_name','last_name','password', 'email','direccion', 'telefono']
-        widgets = {
+        widgets = {   
             'rut':forms.TextInput(
                 attrs={'class':'form-control'}
             ),
@@ -48,6 +62,8 @@ class ClienteForm(forms.ModelForm):
                 raise forms.ValidationError("Debe ingresar un rut válido")
             return rut
 
+    ### para que el select de tipo de cuenta quede al inicio
+    field_order = ['tipo_cuenta','rut','first_name','last_name','password', 'email','direccion', 'telefono']
 
 
 ### Formulario cuenta 
