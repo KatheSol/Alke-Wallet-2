@@ -248,6 +248,14 @@ table .table-striped .table-hover {
 }
 
 
+/*-----------------Datos-cliente-------------------*/
+
+.input-claro{
+    background-color: var(--color_5);
+    color: var(--color_4)
+}
+
+
 /*------------------------------------------------*/
 @media (min-width: 992px) and (max-width: 1080px) {
     a{

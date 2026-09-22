@@ -51,7 +51,6 @@ def registro(request):
 
     return render(request, 'gestion/index/registro_user.html', {'form':form})
 
-
 def dashboard_cliente(request):
     return render(request,"gestion/user/dashboard_cliente.html")
 
@@ -85,7 +84,7 @@ def transacciones(request):
     else:
         return render(request, "gestion/administrador/transacciones.html")
 
-#### muestra la lista de clientes
+#### muestra la lista de clientes en sesión administrador
 def lista_clientes(request):
 
     if request.method =='POST':
@@ -121,11 +120,11 @@ def lista_clientes(request):
     else:
         form = ClienteForm()
 
-    cuentas = Cuenta.objects.all().select_related('cliente')
+    clientes = Cliente.objects.all()
     ### Si existen cuentas registradas envía datos
-    if len(cuentas)>0:
+    if len(clientes)>0:
         return render(request, "gestion/administrador/lista_clientes.html",{
-            'cuentas':cuentas,
+            'clientes':clientes,
             'form': form
             })
     ### sino, muestra solo el html
@@ -135,12 +134,68 @@ def lista_clientes(request):
 def datos_cliente(request,pk):
 
     cliente = get_object_or_404(Cliente, pk=pk)
+
+    if request.method =='POST':
+        ### identificamos la accion a realizar
+        accion = request.POST.get('accion')
+
+        if accion=='nueva_cuenta':
+            tipo_cuenta = request.POST.get('tipo_cuenta')
+            ### verificamos si el cliente ya posee una cuenta del tipo escogido
+            if Cuenta.objects.filter(cliente=pk,tipo_cuenta=tipo_cuenta).exists():
+                messages.error(request, f"Cliente ya posee una cuenta {tipo_cuenta}")
+
+            else:
+                # creamos el numero aleatorio de la cuenta
+                while True:
+                    nro_aleatorio = str(random.randint(1000000000, 9999999999))
+                    if not Cuenta.objects.filter(numero_cuenta=nro_aleatorio).exists():
+                        break # sale del bucle cuando encuentra un número disponible
+
+                # se crea la cuenta bancaria cliente
+                Cuenta.objects.create(
+                    cliente=cliente, 
+                    numero_cuenta=nro_aleatorio,
+                    tipo_cuenta=tipo_cuenta
+                    )
+            ### volvemos a cargar el formulario con los datos del cliente
+            form = EditarClienteForm(instance=cliente)
+
+        elif accion=='cambio_estado':
+
+            cuenta_id = request.POST.get('id_cuenta')
+            nuevo_estado = request.POST.get('estado_futuro')
+
+            print(f'{nuevo_estado}-{cuenta_id}')
+
+            cuenta = Cuenta.objects.get(id=cuenta_id)
+            cuenta.estado = nuevo_estado
+            cuenta.save()
+        
+            form = EditarClienteForm(instance=cliente)
+
+        ### si no se activa un modal entoces el formulario indica actualizar el cliente
+        else:
+            ### el instance=cliente es para hacer referencia al cliente seleccionado
+            form = EditarClienteForm(request.POST,instance=cliente)
+            if form.is_valid():
+                cliente = form.save(commit=False) ###guardar temporalmente
+                cliente.save() ### se guarda
+            else:
+                return render(request, "gestion/administrador/datos_cliente.html",{'form': form})
+            
+    else:
+        form = EditarClienteForm(instance=cliente)
+
+    
     cuentas = Cuenta.objects.filter(cliente_id=cliente)
     transacciones = Transaccion.objects.filter(cuenta__cliente=cliente).select_related('cuenta')
     ultimos_movimientos = Transaccion.objects.filter(cuenta__cliente=cliente).select_related('cuenta').order_by('-fecha')[:5]
+
     return render(request, "gestion/administrador/datos_cliente.html", {
         'cliente': cliente,
         'cuentas': cuentas,
         'transacciones': transacciones,
-        'ultimos_movimientos': ultimos_movimientos
+        'ultimos_movimientos': ultimos_movimientos,
+        'form': form
     })

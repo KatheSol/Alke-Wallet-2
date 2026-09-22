@@ -12,46 +12,37 @@
             <div class="row mb-4">
                 <div class="col-12 d-flex justify-content-between align-items-center">
                     <div>
-                        <h1 class="mb-1 fw-bold"> Gestión de cliente</h1>
+                        <h1 class="mb-1"> Gestión de cliente</h1>
                         <p class="small mb-0">Revisa la información de perfil, productos financieros y movimientos asociados.</p>
                     </div>
-                    <a href="{% url 'lista-clientes' %}" class="btn btn-outline btn-claro btn-sm">
+                    <a href="{% url 'lista-clientes' %}" class="btn btn-claro">
                         ← Volver a la Lista
                     </a>
                 </div>
             </div>
+            <!--para mostrar mensaje de error-->  
+            {% if messages %}
+                    {% for message in messages %}
+                    <div class="alert alert-danger fade-show" role="alert">
+                            {{message}}
+                            <button class="btn-close" type="button" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+            {% endif %}
             <div class="row g-4">
                 <!-- COLUMNA IZQUIERDA: Formulario de Datos Personales -->
                 <div class="col-lg-4">
                     <div class="card border-0 h-100">
                         <div class="card-header modal-color d-flex justify-content-center">
-                            <h5 class="card-title mb-0">{{ cliente.first_name }} {{ cliente.last_name }}</h5>
+                            <h3 class="card-title mb-0">{{ cliente.first_name }} {{ cliente.last_name }}</h3>
                         </div>
                         <div class="card-body p-4">
                             <form method="POST" class="form-claro">
                                 {% csrf_token %}
-                                <div class="mb-3">
-                                    <label class="form-label small fw-bold">RUT</label>
-                                    <input type="text" class="form-control bg-light" value="{{ cliente.rut }}" readonly disabled>
+                                <div>
+                                    {{form.as_p}}
                                 </div>
-                                <!-- Renderizado manual de los campos de Django para que uses Bootstrap -->
-                                <div class="mb-3">
-                                    <label class="form-label">Nombre</label>
-                                    <input type="text" class="form-control bg-light" value="{{ cliente.first_name }}" >
-                                </div> 
-                                <div class="mb-3">
-                                    <label class="form-label">Apellido</label>
-                                    <input type="text" class="form-control bg-light" value="{{ cliente.last_name }}" >
-                                </div> 
-                                <div class="mb-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="text" class="form-control bg-light" value="{{ cliente.email }}" >
-                                </div> 
-                                <div class="mb-3">
-                                    <label class="form-label">Teléfono</label>
-                                    <input type="text" class="form-control bg-light" value="{{ cliente.telefono }}" >
-                                </div> 
-                                <!-- Botones de Acción de Datos -->
+                                <!-- Boton guardar cambios -->
                                 <div class="d-grid gap-2 border-top pt-3">
                                     <button type="submit" class="btn btn-claro">Guardar Cambios</button>
                                 </div>
@@ -64,9 +55,9 @@
                     <div class="d-flex flex-column gap-4">
                         <!-- SECCIÓN DE CUENTAS ASOCIADAS -->
                         <div class="card shadow-sm border-0">
-                            <div class="card-header bg-secondary text-white py-3 d-flex justify-content-between align-items-center">
+                            <div class="card-header modal-color py-3 d-flex justify-content-between align-items-center">
                                 <h5 class="card-title mb-0 fw-semibold">Cuentas Bancarias</h5>
-                                <span class="badge bg-light text-dark fw-bold">{{ cuentas|length }} Cuenta(s)</span>
+                                <button class="btn btn-claro btn-sm w-auto" data-bs-toggle="modal" data-bs-target="#modalNuevaCuenta">+ Nueva Cuenta</button>                               
                             </div>
                             <div class="card-body p-0">
                                 <table class="table table-striped table-hover">
@@ -81,16 +72,16 @@
                                     <tbody>
                                         {% for cuenta in cuentas %}
                                             <tr>
-                                                <td scope="row">{{ cuenta.tipo_cuenta }}</td>
+                                                <td scope="row">{{ cuenta.tipo_cuenta|capfirst }}</td>
                                                 <td>{{ cuenta.numero_cuenta }}</td>
                                                 <td>${{ cuenta.saldo }}</td>
                                                 <td> 
                                                     {% if cuenta.estado == 'activa' %}
-                                                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCambiarEstado" data-id="{{cuenta.pk}}">
+                                                        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalCambiarEstado" data-estado="{{cuenta.estado}}" data-id="{{cuenta.pk}}">
                                                             {{ cuenta.estado|capfirst }}
                                                         </button>
                                                     {% else %}
-                                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalCambiarEstado" data-id="{{cuenta.pk}}">
+                                                        <button class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalCambiarEstado" data-estado="{{cuenta.estado}}" data-id="{{cuenta.pk}}">
                                                             {{ cuenta.estado|capfirst }}
                                                         </button>
                                                     {% endif %}
@@ -110,7 +101,8 @@
 
                         <!-- SECCIÓN DE HISTORIAL DE TRANSACCIONES -->
                         <div class="card shadow-sm border-0">
-                            <div class="card-header bg-dark text-white py-3">
+                            <div class="card-header modal-color py-3 d-flex justify-content-between align-items-center">
+                                <button class="btn btn-success btn-sm w-auto" data-bs-toggle="modal" data-bs-target="#modalExportar">Exportar</button>
                                 <h5 class="card-title mb-0 fw-semibold">Historial de Transacciones</h5>
                             </div>
                             <div class="card-body p-0">
@@ -145,5 +137,77 @@
             </div>
         </div>
     </main>
+
+    <!--MODAL Cambiar el estado de la cuenta bancaria-->
+    <div class="modal fade" id="modalCambiarEstado" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-color">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Cambio de Estado</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formCambioEstado" method="POST" class="form-claro">
+                    {% csrf_token %} <!--formulario seguro-->
+                    <div class="modal-body">
+                        <input type="hidden" name="accion" value="cambio_estado">
+                        <input type="hidden" name="id_cuenta" id ="idCuenta">
+                        <input type="hidden" name="estado_futuro" id ="estadoFut">
+                        <p>¿Deseas dejar la cuenta <strong id="estadoFuturo"></strong>?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-claro">Confirmar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--MODAL agregar cuenta bancaria-->
+    <div class="modal fade" id="modalNuevaCuenta" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-color">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Nueva Cuenta</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formNuevaCuenta" method="POST" class="form-claro">
+                    {% csrf_token %} <!--formulario seguro-->
+                    <div class="modal-body">
+                        <input type="hidden" name="accion" value="nueva_cuenta">
+                        <p>Tipo de cuenta</p>
+                        <select class="form-select" name="tipo_cuenta" aria-label="Default select example">
+                            <option selected>Selecciona una opción</option>
+                            <option value="vista">Cuenta Vista</option>
+                            <option value="corriente">Cuenta Corriente</option>
+                            <option value="ahorro">Cuenta de Ahorro</option>
+                        </select>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-claro">Crear cuenta bancaria</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!--MODAL Exportar no implementado-->
+    <div class="modal fade" id="modalExportar" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content modal-color">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Exportar</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="formCambioEstado" method="POST" class="form-claro">
+                    {% csrf_token %} <!--formulario seguro-->
+                    <div class="modal-body">
+                        <p>Exportar aún no está implementado</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-claro">Exportar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
 {% endblock menu_admin %}

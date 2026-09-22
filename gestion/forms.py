@@ -4,7 +4,7 @@ from .models import *
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 
-## Formulario cliente
+## Formulario para Agregar cliente
 class ClienteForm(forms.ModelForm):
 
     TIPO_CUENTA = [
@@ -65,37 +65,38 @@ class ClienteForm(forms.ModelForm):
     ### para que el select de tipo de cuenta quede al inicio
     field_order = ['tipo_cuenta','rut','first_name','last_name','password', 'email','direccion', 'telefono']
 
+## Formulario para editar cliente
+class EditarClienteForm(forms.ModelForm):
 
-### Formulario cuenta 
-'''class CuentaForm(forms.ModelForm):
     class Meta:
-        model = Cuenta
-        fields = ['cliente', 'numero_cuenta', 'tipo_cuenta','saldo']
-        widgets = {
-            'cliente':forms.TextInput(
-                attrs={'class':'form-control'}
-                ),
-            'numero_cuenta': forms.TextInput(
-                attrs={'class':'form-control'}
+        model = Cliente
+        fields = ['rut','first_name','last_name','email','direccion','telefono']
+        widgets = {   
+            'rut':forms.TextInput(
+                attrs={'class':'form-control input-claro', 'readonly':True}
             ),
-            'tipo_cuenta': forms.TextInput(
-                attrs={'class':'form-control',}
+            'first_name': forms.TextInput(
+                attrs={'class':'form-control input-claro'}
             ),
-            'saldo': forms.DecimalField(
-                attrs={'class':'form-control'}
+            'last_name': forms.TextInput(
+                attrs={'class':'form-control input-claro',}
+            ),
+            'email': forms.EmailInput(
+                attrs={'class':'form-control input-claro', 'type':'email'}
+            ),
+            'direccion': forms.TextInput(
+                attrs={'class':'form-control input-claro'}
+            ),
+            'telefono': forms.TextInput(
+                attrs={'class':'form-control input-claro'}
             ),
         }
         labels = {
-            'cliente': 'Cliente:',
-            'numero_cuenta': 'Numero de cuenta:',
-            'tipo_cuenta': 'Tipo de cuenta:',
-            'saldo': 'Saldo:',
+            'rut': 'RUT:',
+            'first_name': 'Nombre:',
+            'last_name': 'Apellido:',
+            'email': 'Email:',
+            'direccion': 'Dirección',
+            'telefono': 'Teléfono:',
         }
         
-        def clean_cliente(self):
-            cliente = self.cleaned_data['cliente']
-            if len(cliente) <=0:
-                raise forms.ValidationError("El campo cliente no puede estar vacío")
-            return cliente
-
-    '''
