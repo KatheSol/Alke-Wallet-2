@@ -13,6 +13,7 @@
     --color_4: #0b1020;
     --color_5: #d1c7c4;
     --color_6: #192344; 
+    --color_7: #5f0d0d;   /* para mensajes de error*/
 }
 
 main{
@@ -54,6 +55,16 @@ a{
 
 p{
     color:var(--color_1);
+}
+
+/*para el mensaje de error en el formulario*/
+ul li{
+    color: var(--color_0)
+}
+
+/*para el mensaje de error en el formulario login y registrar*/
+.div-login ul li{
+    color: var(--color_7)
 }
 
 footer p {
@@ -189,7 +200,6 @@ main div button {
 .card{
     background-color: var(--color_6);
     color: var(--color_1);
-    width: auto;
 }
 
 .btn-claro{
@@ -241,6 +251,11 @@ table .table-striped .table-hover {
 
 .modal-body form{
     color: var(--color_1);
+}
+
+.modal-content form div p input{
+    background-color: var(--color_5);
+    color: var(--color_4)
 }
 
 .form-claro label{

@@ -23,7 +23,7 @@
                 </thead>
                 <tbody id="tablaTransacciones">
                     {% for transaccion in transacciones %}
-                    <tr>
+                    <tr >
                         <th scope="row">{{ transaccion.fecha|date:'d-m-Y H:i'}}</th>
                         <td>{{ transaccion.cuenta.cliente}}</td>
                         <td>{{ transaccion.cuenta.numero_cuenta}}</td>
@@ -32,9 +32,45 @@
                         <td>{{ transaccion.destinatario.banco }}</td>
                         <td>$ {{ transaccion.monto }}</td>
                         <td>                                             
-                            <button class="btn btn-info accordion-button" data-bs-toggle="modal" data-bs-target="#modalDetalleTransaccion" data-id="{{transaccion.pk}}">
+                            <button class="btn btn-info" data-bs-toggle="collapse" data-bs-target="#{{ transaccion.pk }}" class="accordion-toggle">
                                 Detalle
                             </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <!-- 'colspan="8"' porque la tabla tiene 8 columnas en total -->
+                        <td colspan="8" class="p-0 border-0">
+                            <div class="collapse bg-light" id="{{ transaccion.pk }}">
+                                <div class="row">
+                                    <div class="col-lg-6 d-flex flex-column">
+                                        <label class="card-title mb-0">Datos de Origen</label>
+                                        <form method="POST" class="form-claro">
+                                            {% csrf_token %}
+                                            <div>
+                                                <p>Nombre cliente: {{ transaccion.cuenta.cliente.first_name }} {{ transaccion.cuenta.cliente.last_name}}</p>
+                                                <p>RUT cliente: {{ transaccion.cuenta.cliente }}</p>
+                                                <p>Numero de cuenta: {{ transaccion.cuenta.numero_cuenta }}</p>
+                                                <p>Tipo de transacción: {{ transaccion.tipo_transaccion }}</p>
+                                                <p>Monto: ${{ transaccion.monto }}</p>
+                                            </div>
+                                        </form>
+
+                                    </div>
+                                    <div class="col-lg-6 d-flex flex-column">
+                                        <label class="card-title mb-0">Datos de Destino</label>
+                                        <form method="POST" class="form-claro">
+                                            {% csrf_token %}
+                                            <div>
+                                                <p>Nombre destinatario: {{transaccion.destinatario.nombre}}</p>
+                                                <p>RUT destinatario: {{ transaccion.destinatario.rut }}</p>
+                                                <p>Banco de destino: {{ transaccion.destinatario.banco }}</p>
+                                                <p>Numero de Cuenta: {{ transaccion.destinatario.cuenta }}</p>
+                                                <p>Email destinatario: {{ transaccion.destinatario.email }}</p>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     {% endfor %}

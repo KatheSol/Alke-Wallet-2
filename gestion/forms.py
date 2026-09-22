@@ -25,7 +25,7 @@ class ClienteForm(forms.ModelForm):
         fields = ['rut','first_name','last_name','password', 'email','direccion', 'telefono']
         widgets = {   
             'rut':forms.TextInput(
-                attrs={'class':'form-control'}
+                attrs={'class':'form-control','maxlength':'10'}
             ),
             'first_name': forms.TextInput(
                 attrs={'class':'form-control'}
@@ -43,7 +43,7 @@ class ClienteForm(forms.ModelForm):
                 attrs={'class':'form-control'}
             ),
             'telefono': forms.TextInput(
-                attrs={'class':'form-control'}
+                attrs={'class':'form-control', 'maxlength':'11'}
             ),
         }
         labels = {
@@ -56,11 +56,40 @@ class ClienteForm(forms.ModelForm):
             'telefono': 'Teléfono:',
         }
         
-        def clean_rut(self):
-            rut = self.cleaned_data['rut']
-            if len(rut) < 9:
-                raise forms.ValidationError("Debe ingresar un rut válido")
-            return rut
+    def clean_rut(self):
+        rut = self.cleaned_data['rut']
+        dig_verificador = rut[-1]
+        numero=""
+        for digito in rut:
+            if digito=="-" or not digito.isdigit():
+                break
+            else:
+                numero = numero + digito
+
+        if len(numero)<7:
+            raise forms.ValidationError("Debe ingresar un rut válido 12345678-9")
+        
+        elif not dig_verificador.isdigit():
+            if dig_verificador.lower()!="k":
+                raise forms.ValidationError("Debe ingresar un rut válido 12345678-9")
+        
+        return rut
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data['telefono']
+        digitos=0
+        prefijo=""
+        #recorre el str telefono
+        for num in telefono:
+            digitos+=1
+            #revisa que los tres primeros digitos y los agrega a prefijo 
+            if digitos==1 or digitos ==2 or digitos==3:
+                prefijo = prefijo + num
+
+        #valida que el telefono tenga 11 dígitos y que el prefijo sea 569
+        if digitos!=11 or prefijo!="569":
+            raise forms.ValidationError("Debe ingresar un teléfono válido")
+        return telefono
 
     ### para que el select de tipo de cuenta quede al inicio
     field_order = ['tipo_cuenta','rut','first_name','last_name','password', 'email','direccion', 'telefono']
@@ -99,4 +128,19 @@ class EditarClienteForm(forms.ModelForm):
             'direccion': 'Dirección',
             'telefono': 'Teléfono:',
         }
-        
+
+    def clean_telefono(self):
+        telefono = self.cleaned_data['telefono']
+        digitos=0
+        prefijo=""
+        #recorre el str telefono
+        for num in telefono:
+            digitos+=1
+            #revisa que los tres primeros digitos y los agrega a prefijo 
+            if digitos==1 or digitos ==2 or digitos==3:
+                prefijo = prefijo + num
+
+        #valida que el telefono tenga 11 dígitos y que el prefijo sea 569
+        if digitos!=11 or prefijo!="569":
+            raise forms.ValidationError("Debe ingresar un teléfono válido")
+        return telefono

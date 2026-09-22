@@ -7,6 +7,74 @@
 
 {% block menu_admin %}
 
-<h1>DASHBOARD ASMINISTRADOR</h1>
+<h1 class="mb-5">DASHBOARD AdMINISTRADOR</h1>
+
+    <section>
+        <div class="row mb-5">
+            <div class="card-dashboard card">
+                <div class="card-body">
+                    <h5 class="card-title">Últimos Movimientos mayor a $ 1.500.000</h5>
+                    <hr>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha/Hora</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Cuenta origen</th>
+                                <th scope="col">Banco destino</th>
+                                <th scope="col">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ultimosMovimientosTramo2">
+                            {% for movimientos in ultimos_tramo2%}
+                            <tr>
+                                <td>{{ movimientos.fecha|date:'d-m-Y H:i' }}</td>
+                                <td>{{ movimientos.tipo_transaccion }}</td>
+                                <td>{{ movimientos.cuenta.cliente }}</td>
+                                <td>{{ movimientos.cuenta }}</td>
+                                <td>{{ movimientos.destinatario.banco }}</td>
+                                <td>{{ movimientos.monto }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Últimos Movimientos mayor a $ 600.000</h5>
+                    <hr>
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th scope="col">Fecha/Hora</th>
+                                <th scope="col">Tipo</th>
+                                <th scope="col">Cliente</th>
+                                <th scope="col">Cuenta origen</th>
+                                <th scope="col">Banco destino</th>
+                                <th scope="col">Monto</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ultimosMovimientosTramo1">
+                            {% for movimientos in ultimos_tramo1%}
+                            <tr>
+                                <td>{{ movimientos.fecha|date:'d-m-Y H:i' }}</td>
+                                <td>{{ movimientos.tipo_transaccion }}</td>
+                                <td>{{ movimientos.cuenta.cliente }}</td>
+                                <td>{{ movimientos.cuenta }}</td>
+                                <td>{{ movimientos.destinatario.banco }}</td>
+                                <td>{{ movimientos.monto }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </section>
 
 {% endblock menu_admin %}

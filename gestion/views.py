@@ -6,9 +6,11 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 
 # Create your views here.
+
 def index(request):
     return render(request, "gestion/index/index.html")
 
+### login del usuario
 def login_cliente(request):
     return render(request, "gestion/index/login.html")
 
@@ -51,9 +53,11 @@ def registro(request):
 
     return render(request, 'gestion/index/registro_user.html', {'form':form})
 
+#### dashboard para el cliente
 def dashboard_cliente(request):
     return render(request,"gestion/user/dashboard_cliente.html")
 
+#### transacciones del cliente
 def transacciones_cliente(request):
     ## CAMBIAR A FILTER(cliente=pk)
     transacciones = Transaccion.objects.all().select_related('destinatario').select_related('cliente')
@@ -64,15 +68,26 @@ def transacciones_cliente(request):
     else:
         return render(request, "gestion/user/transacciones_cliente.html")
 
+#### envio de dinero para el cliente
 def envio_dinero(request):
     return render(request, "gestion/user/envio_dinero.html")
 
+#### deposito para el cliente
 def deposito(request):
     return render(request, "gestion/user/deposito.html")
 
+#### dashboard para el administrador
 def dashboard_admin(request):
-    return render(request,"gestion/administrador/dashboard_admin.html")
 
+    ultimos_tramo1 = Transaccion.objects.filter(monto__range=(600000,1500000)).order_by('-fecha')[:5]
+    ultimos_tramo2 = Transaccion.objects.filter(monto__gte=0).order_by('-fecha')[:5]
+
+    return render(request,"gestion/administrador/dashboard_admin.html", {
+        'ultimos_tramo1': ultimos_tramo1 ,
+        'ultimos_tramo2': ultimos_tramo2
+    })
+
+#### muestra la lista de todas las transacciones para el administrador
 def transacciones(request):
 
     transacciones = Transaccion.objects.all().select_related('destinatario','cuenta')
@@ -111,26 +126,30 @@ def lista_clientes(request):
                 numero_cuenta=nro_aleatorio,
                 tipo_cuenta=cuenta_select
                 )
+
+            messages.success(request, f"Cliente {cliente.first_name.capitalize()} {cliente.last_name.capitalize()} creado correctamente") 
             
-            return redirect('lista-clientes')          
+            form = ClienteForm()
+            return redirect('lista-clientes')
         
-        else: 
-            return render(request, "gestion/administrador/lista_clientes.html")
+        
+        else:
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, error)          
+            
 
     else:
         form = ClienteForm()
 
-    clientes = Cliente.objects.all()
-    ### Si existen cuentas registradas envía datos
-    if len(clientes)>0:
-        return render(request, "gestion/administrador/lista_clientes.html",{
-            'clientes':clientes,
-            'form': form
-            })
-    ### sino, muestra solo el html
-    else:
-        return render(request, "gestion/administrador/lista_clientes.html")
+    ##todos los usuarios excepto los admin
+    clientes = Cliente.objects.filter(is_staff=0)
+    return render(request, "gestion/administrador/lista_clientes.html",{
+        'clientes':clientes,
+        'form': form
+        })
 
+#### muestra el detalle de la información del cliente para el administradors
 def datos_cliente(request,pk):
 
     cliente = get_object_or_404(Cliente, pk=pk)
