@@ -47,7 +47,6 @@ class CuentaAdmin(admin.ModelAdmin):
         'numero_cuenta'
     )
 
-
 @admin.register(Destinatario)
 class DestinatarioAdmin(admin.ModelAdmin):
     list_display = (

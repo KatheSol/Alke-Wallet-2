@@ -12,12 +12,14 @@
                 <div class="card-body">
                     <h1 class="card-title">Transferencia</h1>
                     <hr>
-                    <form id="formTransferencia"  class="form-claro">
+                    <form id="formTransferencia"  class="form-claro" method="POST">
                         <div id="mensaje"></div>
                         <label for="destinatario" class="form-label">Seleccione al destinatario</label>
                         <select id="selectDestinatario" class="form-select">
                             <option id="usuariosOptions" selected>Seleccionar</option>
-                            <!--Se rellena con la función listarDestinatarios()-->
+                            {% for destinatario in destinatarios %}
+                                <option id="{{ destinatario.pk }}">{{ destinatario.nombre }} - {{ destinatario.banco }}</option>
+                            {% endfor %}
                         </select>
                         <!-- Button  modal -->
                         <button type="button" class="btn btn-claro" data-bs-toggle="modal" data-bs-target="#modalNuevoDestinatario">

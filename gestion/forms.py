@@ -1,8 +1,7 @@
 from django import forms
 from .models import *
 ##### login
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import AuthenticationForm
 
 ## Formulario para Agregar cliente
 class ClienteForm(forms.ModelForm):
@@ -144,3 +143,22 @@ class EditarClienteForm(forms.ModelForm):
         if digitos!=11 or prefijo!="569":
             raise forms.ValidationError("Debe ingresar un teléfono válido")
         return telefono
+
+
+class LoginForm(AuthenticationForm):
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                'class':'form-control',
+                'placeholder':'RUT'
+            }
+        )
+    )
+    password = forms.CharField(
+            widget=forms.PasswordInput(
+                attrs={
+                    'class':'form-control',
+                    'placeholder':'Contraseña'
+                }
+            )
+        )

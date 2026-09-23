@@ -139,3 +139,9 @@ MAILERS = {
 
 #indica a Django que Cliente es el modelo principal de usuarios
 AUTH_USER_MODEL = 'gestion.Cliente'
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
+
+LOGIN_REDIRECT_URL = 'login-redirect-user'
+LOGOUT_REDIRECT_URL = 'index'

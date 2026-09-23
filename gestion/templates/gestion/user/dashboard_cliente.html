@@ -3,7 +3,7 @@
 {% load static %} 
 
 {% block title %} Dashboard | {% endblock %}
-{% block title_nav %} Usuario {% endblock %}
+{% block title_nav %} {{usuario.first_name}} {% endblock %}
 
 {% block menu_user %}
     <section>
@@ -17,15 +17,15 @@
                             <i class="fa-solid fa-wallet"></i>
                         </p>
                     </div>
-                    <a href="{% url 'envio-dinero' %}" class="btn btn-claro">Enviar Dinero</a>
-                    <a href="{% url 'deposito' %}" class="btn btn-claro">Depositar</a>
+                    <a href="{% url 'envio-dinero' usuario.pk %}" class="btn btn-claro">Enviar Dinero</a>
+                    <a href="{% url 'deposito' usuario.pk %}" class="btn btn-claro">Depositar</a>
                 </div>
             </div>
             <div class="col">
                 <div class="card">
                     <div class="card-body">
                         <h1 class="card-title">Últimos Movimientos</h1>
-                        <a href="{% url 'transacciones-cliente' %}" class="btn btn-claro">Ver más</a>
+                        <a href="{% url 'transacciones-cliente' usuario.pk %}" class="btn btn-claro">Ver más</a>
                         <hr>
                         <table class="table table-striped table-hover">
                             <thead>

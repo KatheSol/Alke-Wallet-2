@@ -22,12 +22,15 @@
                 </thead>
                 <tbody id="tablaTransacciones">
                     {% for transaccion in transacciones %}
+                    <tr>
                         <th scope="row">{{ transaccion.fecha|date:'d-m-Y H:i'}}</th>
                         <td>{{ transaccion.tipo_transaccion|capfirst }}</td>
                         <td>{{ transaccion.destinatario.nombre }}</td>
                         <td>{{ transaccion.destinatario.rut }}</td>
+                        <td>{{ transaccion.destinatario.cuenta }}</td>
                         <td>{{ transaccion.destinatario.banco }}</td>
                         <td>$ {{ transaccion.monto }}</td>
+                    </tr>
                     {% endfor %}
                 </tbody>
             </table>

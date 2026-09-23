@@ -5,14 +5,22 @@ from .forms import *
 from django.contrib.auth import login, logout
 from django.contrib import messages
 
+
+
 # Create your views here.
 
 def index(request):
     return render(request, "gestion/index/index.html")
 
 ### login del usuario
-def login_cliente(request):
-    return render(request, "gestion/index/login.html")
+def login_usuario(request):
+    return render(request, "gestion/registration/login.html")
+
+def login_redirect_user(request):
+    if request.user.is_staff:
+        return redirect('dashboard-admin')
+    else:
+        return redirect('dashboard-cliente')
 
 ### registro cliente
 def registro(request):
@@ -21,6 +29,7 @@ def registro(request):
         form = ClienteForm(request.POST)
         if form.is_valid():
             cliente = form.save(commit=False) ###guardar temporalmente
+            cliente.set_password(cliente.password)
             cliente.username = cliente.rut
             cliente.save() ### se guarda
             login(request,cliente)
@@ -46,41 +55,60 @@ def registro(request):
             
     
         else: 
-            return render(request,"gestion/index/registro_user.html", {'form':form})
+            return render(request,"gestion/registration/registro_user.html", {'form':form})
 
     else:
         form = ClienteForm()
 
-    return render(request, 'gestion/index/registro_user.html', {'form':form})
+    return render(request, 'gestion/registration/registro_user.html', {'form':form})
 
 #### dashboard para el cliente
 def dashboard_cliente(request):
-    return render(request,"gestion/user/dashboard_cliente.html")
+    usuario = request.user
+    return render(request,"gestion/user/dashboard_cliente.html", {'usuario':usuario})
 
 #### transacciones del cliente
-def transacciones_cliente(request):
-    ## CAMBIAR A FILTER(cliente=pk)
-    transacciones = Transaccion.objects.all().select_related('destinatario').select_related('cliente')
+def transacciones_cliente(request,pk):
+    usuario = get_object_or_404(Cliente, pk=pk)
+
+    transacciones = Transaccion.objects.filter(cuenta__cliente=pk).select_related('cuenta')
     ### Si existen transacciones registradas envía datos
     if len(transacciones)>0:
-        return render(request, "gestion/user/transacciones_cliente.html", {'transacciones':transacciones})
+        return render(request, "gestion/user/transacciones_cliente.html", {
+            'transacciones':transacciones,
+            'usuario':usuario
+            })
     ### sino, muestra solo el html
     else:
         return render(request, "gestion/user/transacciones_cliente.html")
 
 #### envio de dinero para el cliente
-def envio_dinero(request):
-    return render(request, "gestion/user/envio_dinero.html")
+def envio_dinero(request,pk):
+
+    usuario = get_object_or_404(Cliente, pk=pk)
+
+    if request.method =='POST':
+        pass
+    else:
+        pass
+
+    destinatarios = Destinatario.objects.filter(cliente=pk)
+
+    return render(request, "gestion/user/envio_dinero.html", {
+        'usuario':usuario,
+        'destinatarios': destinatarios
+        })
 
 #### deposito para el cliente
-def deposito(request):
-    return render(request, "gestion/user/deposito.html")
+def deposito(request,pk):
+    usuario = get_object_or_404(Cliente, pk=pk)
+    return render(request, "gestion/user/deposito.html", {'usuario':usuario})
 
 #### dashboard para el administrador
 def dashboard_admin(request):
 
     ultimos_tramo1 = Transaccion.objects.filter(monto__range=(600000,1500000)).order_by('-fecha')[:5]
-    ultimos_tramo2 = Transaccion.objects.filter(monto__gte=0).order_by('-fecha')[:5]
+    ultimos_tramo2 = Transaccion.objects.filter(monto__gte=1500000).order_by('-fecha')[:5]
 
     return render(request,"gestion/administrador/dashboard_admin.html", {
         'ultimos_tramo1': ultimos_tramo1 ,
@@ -107,6 +135,7 @@ def lista_clientes(request):
         form = ClienteForm(request.POST)
         if form.is_valid():
             cliente = form.save(commit=False) ###guardar temporalmente
+            cliente.set_password(cliente.password)
             cliente.username = cliente.rut
             cliente.save() ### se guarda
 
@@ -143,7 +172,7 @@ def lista_clientes(request):
         form = ClienteForm()
 
     ##todos los usuarios excepto los admin
-    clientes = Cliente.objects.filter(is_staff=0)
+    clientes = Cliente.objects.exclude(is_staff=1)
     return render(request, "gestion/administrador/lista_clientes.html",{
         'clientes':clientes,
         'form': form
