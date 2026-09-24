@@ -1,0 +1,109 @@
+============
+|| CREATE ||
+============
+
+>>>from gestion.models import Cliente
+>>>Cliente.objects.create(username='1994567-8', password='Abc1234', first_name='Rosa', last_name='Jerez', email='rosa.jereza@gmail.com', rut='1994567-8', direccion='Calle 13', telefono='56987654321')
+
+>>>from gestion.models import Cuenta, Cliente
+>>> Cuenta.objects.create(cliente_id=5, numero_cuenta='9566543987', saldo=300000)
+<Cuenta: 9566543987>
+
+>>> from gestion.models import Cuenta, Cliente
+>>> Cuenta.objects.create(cliente_id=5, numero_cuenta='9567876543', tipo_cuenta='ahorro')             
+<Cuenta: 9567876543>
+
+>>> from gestion.models import Cliente, Destinatario
+>>> Destinatario.objects.create(nombre='Celia Arriagada', rut='3456789-0', email='celia.a@gmail.com', cuenta='00-000-9087', banco='Banco Chile', cliente_id=5)
+<Destinatario: Celia Arriagada>
+
+>>> from gestion.models import Cliente, Destinatario
+>>> Destinatario.objects.create(nombre='Carla Santana', rut='12789097-k', email='carla.s@gmail.com', cuenta='12789097', banco='Banco Estado', cliente_id=5)    
+<Destinatario: Carla Santana>
+
+>>> from gestion.models import Cliente, Destinatario, Transaccion, Cuenta
+>>> Transaccion.objects.create(tipo_transaccion='Transferencia', monto=3000, cuenta_id=1, destinatario_id=1)
+<Transaccion: Transferencia de $3000 a Celia Arriagada>
+
+>>> from gestion.models import Cliente, Destinatario, Transaccion, Cuenta 
+>>> Transaccion.objects.create(tipo_transaccion='Transferencia', monto=90000, cuenta_id=1, destinatario_id=2)
+<Transaccion: Transferencia de $90000 a Carla Santana>
+
+==========
+|| READ ||
+==========
+
+>>> lista_clientes=Cliente.objects.all() 
+>>> print(list(lista_clientes))
+[<Cliente: 1234567-8>, <Cliente: 1994567-8>, <Cliente: 14560987-5>, <Cliente: 13456780-3>, <Cliente: 15678943-0>, <Cliente: 6789543-9>, <Cliente: 8976543-9>, <Cliente: 16543289-k>, <Cliente: 17876543-7>]
+
+>>> cuentas = Cuenta.objects.filter(cliente_id=5)
+>>> print(list(cuentas))
+[<Cuenta: 9566543987>, <Cuenta: 9567876543>]
+>>> 
+
+>>> cuentas_ahorro = Cuenta.objects.filter(tipo_cuenta='ahorro')
+>>> print(list(cuentas_ahorro))
+[<Cuenta: 9172322663>, <Cuenta: 4756829506>, <Cuenta: 9567876543>]
+
+>>> for cuenta in list(cuentas_ahorro):            
+...     print(f'{cuenta.cliente} {cuenta.tipo_cuenta}')
+... 
+15678943-0 ahorro
+1994567-8 ahorro
+>>> 
+
+
+============
+|| UPDATE ||
+============
+
+>>> cliente = Cliente.objects.get(rut='1994567-8')
+>>> print(f'{cliente.first_name} {cliente.last_name}')
+Carmen Jerez
+>>> cliente.last_name='Gonzalez'
+>>> cliente.save()
+>>> print(f'{cliente.first_name} {cliente.last_name}')
+Carmen Gonzalez
+>>> 
+
+>>> cuenta = Cuenta.objects.get(tipo_cuenta='ahorro', cliente=5)
+>>> print(cuenta.saldo)
+0.00
+>>> cuenta.saldo=70000 
+>>> cuenta.save()                               
+>>> print(cuenta.saldo)
+70000
+>>> 
+
+============
+|| DELETE ||
+============
+
+>>> Cuenta.objects.filter(numero_cuenta='9567876543').delete()            
+(1, {'gestion.Cliente': 1})
+>>> 
+
+
+=========
+|| ROW ||
+=========
+
+>>> query = "SELECT * FROM db_alke_wallet.gestion_cuenta  WHERE estado = %s"
+>>> cuentas = Cuenta.objects.raw(query, ["activa"])
+>>> print(list(cuentas))
+[<Cuenta: 85834963>, <Cuenta: 3736279458>, <Cuenta: 9172322663>, <Cuenta: 8309411577>, <Cuenta: 9174475720>, <Cuenta: 7733094790>, <Cuenta: 9280204567>]
+>>> 
+
+============
+|| CURSOR ||
+============
+
+>>> from django.db import connection
+>>> sql = "SELECT cliente_id, saldo FROM gestion_cuenta WHERE estado = %s"
+>>> with connection.cursor() as cursor:
+...     cursor.execute(sql, ["activa"])
+...     filas = cursor.fetchall()
+...                                    
+8
+
